@@ -23,7 +23,6 @@ namespace Bowling
             inputOutputData.InputText = newGame.GetInputString(gameData);
             var res=newGame.Calculation(gameData);
             inputOutputData.OutputText = newGame.outputGameData(res);
-            newGame.cleanData();
         }
 
         
