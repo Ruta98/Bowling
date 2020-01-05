@@ -100,7 +100,7 @@ namespace Bowling.Classes
             var tempSum = 0;
             var Scores = new List<int>();
 
-            //
+            //cycle by rounds
             for (int i = 0; (i < parGameResulte.Throws.Length) && (Scores.Count < parGameResulte.RoundsNumber); i++)
             {
                 /*add to the sum the value of the current throw (the first throw of the round)
@@ -113,8 +113,8 @@ namespace Bowling.Classes
                     //if spare or strike (10 + 0(the first throw of next round))
                     if (parGameResulte.Throws[i] + parGameResulte.Throws[i + 1] == 10)
                     {
-                        //when spare add first bonus throw
-                        //when strike add second bonus throw
+                        /*when spare add first bonus throw
+                        when strike add second bonus throw*/
                         tempSum += parGameResulte.Throws[i + 2];
 
                         //in order to not to skip the beginn of the next round
