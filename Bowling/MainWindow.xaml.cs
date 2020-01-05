@@ -8,19 +8,21 @@ namespace Bowling
     /// </summary>
     public partial class MainWindow : Window
     {
-        Game newGame;
+                
+        InputOutputData inputOutputData = new InputOutputData();
         public MainWindow()
         {
-            InitializeComponent();
-            newGame = new Game();
-            DataContext = newGame;
+            InitializeComponent();                  
+            DataContext = inputOutputData;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            newGame.inputGameData();
-            newGame.Calculation();
-            newGame.outputGameData();
+            var newGame = new Game();
+            var gameData=newGame.inputGameData(inputOutputData.InputText);
+            inputOutputData.InputText = newGame.GetInputString(gameData);
+            var res=newGame.Calculation(gameData);
+            inputOutputData.OutputText = newGame.outputGameData(res);
             newGame.cleanData();
         }
 

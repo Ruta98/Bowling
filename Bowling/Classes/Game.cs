@@ -7,27 +7,8 @@ namespace Bowling.Classes
 {
     class Game : BaseViewModel
     {
-        public string InputText
-        {
-            get => inputText;
-            set
-            {
-                inputText = value;
-                OnPropertyChanged(nameof(InputText));
-            }
-        }
-        public string OutputText
-        {
-            get => outputText;
-            set
-            {
-                outputText = value;
-                OnPropertyChanged(nameof(OutputText));
-            }
-        }
 
         private string inputText = "";
-        private string outputText = "";
         Random rand = new Random();
         private List<int> tempThrowsList = new List<int>();
         public class GameData
@@ -36,13 +17,13 @@ namespace Bowling.Classes
             public int[] Throws;        
         }
 
-        private List<int> Scores = new List<int>();
+        //private List<int> Scores = new List<int>();
         private int tempSum = 0;
         private GameData GameResulte = new GameData();
 
-        public void inputGameData()
+        public GameData inputGameData(string parInputText)
         {
-            inputText = InputText;
+            inputText = parInputText;
             if (string.IsNullOrEmpty(inputText))
             {
                 DataRandomInput();
@@ -53,9 +34,10 @@ namespace Bowling.Classes
                 GameResulte.RoundsNumber = Convert.ToInt32(r[0]);
                 GameResulte.Throws = r[1].Split(',').Select(x => int.Parse(x)).ToArray();
             }
+            return GameResulte;
         }
         
-        private void DataRandomInput()
+        private GameData DataRandomInput()
         {
             GameResulte.RoundsNumber = rand.Next(1,11);
 
@@ -64,9 +46,13 @@ namespace Bowling.Classes
                 RoundRamdomInput(i);
             }
             GameResulte.Throws = tempThrowsList.ToArray();
-
-            inputText = string.Concat(GameResulte.RoundsNumber, ':', string.Join(",", tempThrowsList));
-            InputText = inputText;
+            
+            return GameResulte;            
+            
+        }
+        public string GetInputString(GameData parGD)
+        {
+            return string.Concat(parGD.RoundsNumber, ':', string.Join(",", parGD.Throws));
         }
 
         private void RoundRamdomInput(int i)
@@ -95,15 +81,16 @@ namespace Bowling.Classes
         }
 
 
-        public void Calculation()
+        public List<int> Calculation(GameData parGameResulte)
         {
-            for (int i = 0; (i < GameResulte.Throws.Length) && (Scores.Count < GameResulte.RoundsNumber); i++)
+            List<int> Scores = new List<int>();
+            for (int i = 0; (i < parGameResulte.Throws.Length) && (Scores.Count < parGameResulte.RoundsNumber); i++)
             {
-                tempSum += GameResulte.Throws[i] + GameResulte.Throws[i + 1];
-                if (GameResulte.Throws[i] + GameResulte.Throws[i + 1] <= 10)
+                tempSum += parGameResulte.Throws[i] + parGameResulte.Throws[i + 1];
+                if (parGameResulte.Throws[i] + parGameResulte.Throws[i + 1] <= 10)
                 {
-                    if (GameResulte.Throws[i] + GameResulte.Throws[i + 1] == 10)
-                        if (GameResulte.Throws[i] == 10) { Bonus(i + 2); i -= 1; }
+                    if (parGameResulte.Throws[i] + parGameResulte.Throws[i + 1] == 10)
+                        if (parGameResulte.Throws[i] == 10) { Bonus(i + 2); i -= 1; }
                         else Bonus(i + 2);
 
                     i += 1;
@@ -111,6 +98,7 @@ namespace Bowling.Classes
                 else Bonus(i + 2);
                 Scores.Add(tempSum);
             }
+            return Scores;
         }
 
         private void Bonus(int nextThrow)
@@ -118,19 +106,19 @@ namespace Bowling.Classes
             tempSum += GameResulte.Throws[nextThrow];
         }
 
-        public void outputGameData()
+        public string outputGameData(IEnumerable<int> Scores)
         {
             List<string> tempScores = new List<string>();
             tempScores = Scores.Select(x => x.ToString()).ToList();
-            outputText = string.Join(",", Scores);
-            OutputText = outputText;
+            var outputText = string.Join(",", Scores);
+            //OutputText = outputText;
+            return outputText;
         }
         public void cleanData()
         {
             inputText = "";
-            outputText = "";
             tempThrowsList = new List<int>();
-            Scores = new List<int>();
+            //Scores = new List<int>();
             tempSum = 0;
             GameResulte = new GameData();
         }
